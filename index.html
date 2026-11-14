@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English Flashcards · Английские карточки</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Neucha&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--desk:#2d5a4e;--grid:rgba(255,255,255,.06);--on-desk:#f2f6f0;--on-desk-2:#c9dcd2;--paper:#fffef9;--paper2:#fff2b0;--ink:#1d2a5a;--red:#c2352f;--rule:#c4d7ea;--rule2:#e9d98f;--tape:#e6d6a2;--tape-ink:#3a3320;--good:#1f6b3e;color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--desk:#1b2d28;--grid:rgba(255,255,255,.04);color-scheme:dark}}
+:root[data-theme="dark"]{--desk:#1b2d28;--grid:rgba(255,255,255,.04);color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background-color:var(--desk);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--on-desk);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.4;min-height:100%}
+main{max-width:560px;margin:0 auto;padding:24px 16px 48px}
+h1{display:inline-block;font:400 1.9rem/1.2 "Neucha","Comic Sans MS",cursive;background:var(--tape);color:var(--tape-ink);padding:4px 18px;margin:0 0 8px -4px;transform:rotate(-1.5deg);box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.sub{color:var(--on-desk-2);margin:6px 0 20px;font-size:.92rem}
+.chips{display:flex;gap:4px;overflow-x:auto;margin:0 -16px 20px;padding:0 16px;border-bottom:2px solid rgba(255,255,255,.3);scrollbar-width:none}
+.chip{flex:none;border:0;background:rgba(255,255,255,.1);color:var(--on-desk);border-radius:6px 6px 0 0;padding:8px 14px 6px;font:400 1.1rem "Neucha","Comic Sans MS",cursive;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+button:focus-visible,.card:focus-visible{outline:3px solid #ffd25e;outline-offset:3px}
+.prog{margin:0 0 22px;font-size:.9rem;color:var(--on-desk-2)}
+.tally{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.tally b{width:12px;height:12px;border:1.5px solid var(--on-desk-2);border-radius:2px}
+.tally b.on{background:#ffd25e;border-color:#ffd25e}
+.scene{position:relative;perspective:1200px;margin-bottom:22px}
+.scene::before,.scene::after{content:"";position:absolute;inset:0;background:var(--paper);border-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.scene::before{transform:rotate(-2deg) translateY(3px)}
+.scene::after{transform:rotate(1.6deg) translateY(2px)}
+.card{position:relative;z-index:1;height:min(320px,50vh);min-height:240px;cursor:pointer;transform-style:preserve-3d;transition:transform .55s}
+.card.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:64px 20px 36px;text-align:center;color:var(--ink);box-shadow:0 10px 22px rgba(0,0,0,.35)}
+.front{background:var(--paper) repeating-linear-gradient(to bottom,transparent 0 35px,var(--rule) 35px 36px) 0 6px}
+.rear{background:var(--paper2) repeating-linear-gradient(to bottom,transparent 0 35px,var(--rule2) 35px 36px) 0 6px;transform:rotateY(180deg)}
+.face::before{content:"";position:absolute;left:0;right:0;top:50px;height:2px;background:var(--red)}
+.cap{position:absolute;top:16px;left:22px;font-size:.8rem;color:#6a7694}
+.emoji{position:absolute;top:10px;right:18px;font-size:1.8rem;line-height:1;transform:rotate(8deg)}
+.word{font:400 clamp(2.4rem,11vw,3.6rem)/1.1 "Neucha","Comic Sans MS",cursive;word-break:break-word}
+.rear .word{color:var(--red)}
+.hint{position:absolute;bottom:12px;left:0;right:0;font-size:.8rem;color:#6a7694}
+.say{border:2px solid var(--ink);background:transparent;color:var(--ink);border-radius:3px;padding:3px 14px;font:400 1.1rem "Neucha","Comic Sans MS",cursive;cursor:pointer}
+.stamp{position:absolute;right:20px;bottom:34px;border:3px solid var(--good);color:var(--good);border-radius:4px;padding:0 10px;font:400 1.3rem "Neucha",cursive;transform:rotate(-8deg);opacity:.85}
+.row{display:flex;gap:12px}
+.row>button{flex:1}
+.act{border:2px solid;border-radius:3px;padding:12px;background:var(--paper);font:400 1.25rem/1.2 "Neucha","Comic Sans MS",cursive;cursor:pointer}
+.act small{font:inherit;font-size:.95rem;opacity:.8}
+.act:active{transform:translateY(1px)}
+.no{border-color:var(--red);color:var(--red)}
+.yes{border-color:var(--good);color:var(--good)}
+.nav{display:flex;align-items:center;justify-content:space-between;margin:14px 0 22px}
+.nav button{border:0;background:none;color:var(--on-desk);padding:6px 4px;font:inherit;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;color:var(--on-desk-2);font-size:.88rem}
+.tool{border:1px dashed var(--on-desk-2);background:none;color:var(--on-desk);border-radius:3px;padding:5px 10px;font:inherit;cursor:pointer}
+.tools label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.done{text-align:center;padding:48px 16px;background:var(--paper);color:var(--ink);border-radius:3px;box-shadow:0 10px 22px rgba(0,0,0,.35)}
+.done h2{font:400 1.8rem "Neucha",cursive;margin:0 0 8px}
+.done .sub{color:#6a7694}
+@media (prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <h1>English for beginners</h1>
+  <p class="sub">Английский для начинающих · tap the card to flip · нажмите на карточку</p>
+  <div class="chips" id="chips" role="group" aria-label="Topics"></div>
+  <div class="prog"><span id="ptext"></span><div class="tally" id="tally"></div></div>
+  <div id="stage"></div>
+  <div class="tools">
+    <button class="tool" id="dir"></button>
+    <button class="tool" id="shuf">Shuffle · Перемешать</button>
+    <label><input type="checkbox" id="hide"> Hide learned · Скрыть выученные</label>
+    <button class="tool" id="reset">Reset · Сбросить</button>
+  </div>
+</main>
+<script>
+const DATA=[
+["Greetings","Приветствия","👋",[["hello","привет"],["goodbye","до свидания"],["please","пожалуйста"],["thank you","спасибо"],["yes","да"],["no","нет"],["sorry","извините"],["good morning","доброе утро"]]],
+["Numbers","Числа","🔢",[["one","один","1️⃣"],["two","два","2️⃣"],["three","три","3️⃣"],["four","четыре","4️⃣"],["five","пять","5️⃣"],["six","шесть","6️⃣"],["seven","семь","7️⃣"],["eight","восемь","8️⃣"],["nine","девять","9️⃣"],["ten","десять","🔟"]]],
+["Colors","Цвета","🎨",[["red","красный","🔴"],["blue","синий","🔵"],["green","зелёный","🟢"],["yellow","жёлтый","🟡"],["black","чёрный","⚫"],["white","белый","⚪"],["orange","оранжевый","🟠"],["purple","фиолетовый","🟣"]]],
+["Family","Семья","👨‍👩‍👧",[["mother","мама","👩"],["father","папа","👨"],["sister","сестра","👧"],["brother","брат","👦"],["grandmother","бабушка","👵"],["grandfather","дедушка","👴"],["son","сын"],["daughter","дочь"]]],
+["Food","Еда","🍎",[["bread","хлеб","🍞"],["water","вода","💧"],["milk","молоко","🥛"],["apple","яблоко","🍎"],["egg","яйцо","🥚"],["cheese","сыр","🧀"],["rice","рис","🍚"],["tea","чай","🍵"]]],
+["Animals","Животные","🐶",[["cat","кошка","🐱"],["dog","собака","🐶"],["bird","птица","🐦"],["fish","рыба","🐟"],["horse","лошадь","🐴"],["cow","корова","🐮"],["rabbit","кролик","🐰"],["bear","медведь","🐻"]]],
+["Verbs","Глаголы","🏃",[["to eat","есть","🍽️"],["to drink","пить","🥤"],["to go","идти","🚶"],["to read","читать","📖"],["to write","писать","✏️"],["to sleep","спать","😴"],["to like","любить, нравиться","❤️"],["to have","иметь"]]],
+["Days","Дни недели","📅",[["Monday","понедельник"],["Tuesday","вторник"],["Wednesday","среда"],["Thursday","четверг"],["Friday","пятница"],["Saturday","суббота"],["Sunday","воскресенье"]]]
+];
+const ALL=DATA.flatMap((c,ci)=>c[3].map(w=>({en:w[0],ru:w[1],e:w[2]||c[2],ci})));
+let cat=-1,dir="en",onlyNew=false,i=0,deck=[],known=new Set(),busy=false;
+try{known=new Set(JSON.parse(localStorage.getItem("ef-known")||"[]"))}catch(e){}
+try{dir=localStorage.getItem("ef-dir")==="ru"?"ru":"en"}catch(e){}
+const $=id=>document.getElementById(id);
+const save=()=>{try{localStorage.setItem("ef-known",JSON.stringify([...known]))}catch(e){}};
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+function chips(){
+  const items=[[-1,"All · Все"],...DATA.map((c,k)=>[k,c[0]+" · "+c[1]])];
+  $("chips").innerHTML=items.map(([k,t])=>`<button class="chip" data-k="${k}" aria-pressed="${k===cat}">${esc(t)}</button>`).join("");
+}
+function build(){
+  deck=ALL.filter(w=>(cat<0||w.ci===cat)&&(!onlyNew||!known.has(w.en)));
+  if(i>=deck.length)i=0;
+  render();
+}
+function progress(){
+  const scope=ALL.filter(w=>cat<0||w.ci===cat),n=scope.filter(w=>known.has(w.en)).length;
+  $("ptext").textContent="Learned · Выучено: "+n+" / "+scope.length;
+  $("tally").innerHTML=scope.map(w=>"<b"+(known.has(w.en)?" class=\"on\"":"")+"></b>").join("");
+}
+function render(){
+  progress();
+  $("dir").textContent=dir==="en"?"English → Русский":"Русский → English";
+  const st=$("stage");
+  if(!deck.length){
+    st.innerHTML=`<div class="done"><h2>All learned! · Всё выучено!</h2><p class="sub">Uncheck “Hide learned” or pick another topic.<br>Снимите галочку «Скрыть выученные» или выберите другую тему.</p></div>`;
+    return;
+  }
+  const w=deck[i],cn=DATA[w.ci][0]+" · "+DATA[w.ci][1],q=dir==="en"?w.en:w.ru,a=dir==="en"?w.ru:w.en;
+  st.innerHTML=`<div class="scene"><div class="card" id="card" tabindex="0" role="button" aria-label="Flip card">
+    <div class="face front"><div class="cap">${cn}</div>${known.has(w.en)?'<div class="stamp">Знаю</div>':""}<div class="emoji">${w.e}</div><div class="word">${esc(q)}</div>
+      ${dir==="en"?'<button class="say" id="say" type="button">Listen · Слушать</button>':''}<div class="hint">Tap to flip · Нажмите, чтобы перевернуть</div></div>
+    <div class="face rear"><div class="cap">${cn}</div><div class="word">${esc(a)}</div>
+      ${dir==="ru"?'<button class="say" id="say" type="button">Listen · Слушать</button>':''}<div class="hint">${esc(q)}</div></div></div></div>
+    <div class="row"><button class="act no" id="no">Still learning<br><small>Ещё учу</small></button><button class="act yes" id="yes">I know it<br><small>Знаю</small></button></div>
+    <div class="nav"><button id="prev" aria-label="Previous">← Back</button><span>${i+1} / ${deck.length}</span><button id="next" aria-label="Next">Next →</button></div>`;
+  const card=$("card");
+  card.onclick=e=>{if(e.target.closest("#say"))return;card.classList.toggle("flip")};
+  $("say").onclick=e=>{e.stopPropagation();speak(w.en)};
+  $("no").onclick=()=>{known.delete(w.en);save();go(1)};
+  $("yes").onclick=()=>{known.add(w.en);save();onlyNew?(deck.splice(i,1),i>=deck.length&&(i=0),swap()):go(1)};
+  $("prev").onclick=()=>go(-1);
+  $("next").onclick=()=>go(1);
+}
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+function swap(){
+  const c=$("card");
+  if(c&&c.classList.contains("flip")){c.classList.remove("flip");setTimeout(render,250)}else render();
+}
+function go(d){
+  if(!deck.length)return;
+  i=(i+d+deck.length)%deck.length;
+  swap();
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".chip");
+  if(b){cat=+b.dataset.k;i=0;chips();build()}
+});
+$("dir").onclick=()=>{dir=dir==="en"?"ru":"en";try{localStorage.setItem("ef-dir",dir)}catch(e){}render()};
+$("shuf").onclick=()=>{for(let k=deck.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[deck[k],deck[j]]=[deck[j],deck[k]]}i=0;render()};
+$("hide").onchange=e=>{onlyNew=e.target.checked;i=0;build()};
+$("reset").onclick=()=>{if(confirm("Reset progress? · Сбросить прогресс?")){known.clear();save();build()}};
+document.addEventListener("keydown",e=>{
+  const c=$("card");if(!c)return;
+  if(e.key==="ArrowRight")go(1);
+  else if(e.key==="ArrowLeft")go(-1);
+  else if((e.key===" "||e.key==="Enter")&&e.target.tagName!=="BUTTON"&&e.target.tagName!=="INPUT"){e.preventDefault();c.classList.toggle("flip")}
+});
+chips();build();
+</script>
+</body>
+</html>
